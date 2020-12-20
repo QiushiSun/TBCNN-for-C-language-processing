@@ -1,0 +1,4 @@
+embeddings {
+  tensor_name: "network/inputs/embeddings:0"
+  metadata_path: "vectorizer/metadata.tsv"
+}

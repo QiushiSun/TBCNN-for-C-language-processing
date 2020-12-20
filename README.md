@@ -20,6 +20,54 @@ pycparser
 
 Remark: C language source code with no comment is recommended since pycparser might give an error when dealing with commented data.
 
+#### How to use:
+
+1.directory new_ProgramData contains 10 C language programming questions, each one has 500 samples. The original data set is available at https://site.google.com/site/treebasedcnn/
+
+2.gerenrate AST
+
+```
+1. python code2ast/commands.py poj --infile ../new_ProgramData --out ../tbcnn-data/cpoj/test.pkl
+```
+
+3.Get nodes 
+
+```
+2. python sampler/commands.py nodes --infile ../tbcnn-data/cpoj/test.pkl --outfile ../tbcnn-data/cpoj/test_nodes.pkl
+```
+
+4.copy node list from stdout to NODE_LIST in vectorizer/node_map
+
+```
+NODE_LIST = [
+'Typedef', 'ParamList', 'For', 'UnaryOp', 'TernaryOp', 'Label', 'InitList', 'IdentifierType', 'FuncDef', 'DeclList', 'Struct', 'PtrDecl', 'Return', 'FuncCall', 'Assignment', 'FuncDecl', 'Enum', 'ID', 'Break', 'DoWhile', 'StructRef', 'BinaryOp', 'Compound', 'ArrayDecl', 'Case', 'TypeDecl', 'Default', 'Cast', 'While', 'Continue', 'ArrayRef', 'Enumerator', 'Typename', 'ExprList', 'Goto', 'Decl', 'Constant', 'FileAST', 'Switch', 'EmptyStatement', 'EnumeratorList', 'If'
+]
+```
+
+5.Get AST trees for tbcnn
+
+```
+python sampler/commands.py trees --infile ../tbcnn-data/cpoj/cpoj.pkl --outfile ../tbcnn-data/cpoj/test_algo_trees.pkl
+```
+
+6.code embedding
+
+```
+python vectorizer/commands.py ast2vec --in ../tbcnn-data/cpoj/cpoj_nodes.pkl --out ../tbcnn-data/cpoj/test_embedding.pkl --checkpoint vectorizer/logs
+```
+
+7.Training
+
+```
+python classifier/commands.py train --infile ../tbcnn-data/cpoj/test_trees.pkl --embedfile ../tbcnn-data/cpoj/test_embedding.pkl --learn_rate 0.1 --batch_size 2 --conv_feature 100 --epoch 1
+```
+
+8.Test
+
+```
+python classifier/commands.py test --infile ../tbcnn-data/cpoj/test_trees.pkl --embedfile ../tbcnn-data/cpoj/test_embedding.pkl --learn_rate 0.1 --batch_size 2 --conv_feature 100 --epoch 1
+```
+
 #### Results(for reference only):
 
 Training Data Set
